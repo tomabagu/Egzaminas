@@ -9,34 +9,35 @@ namespace Egzaminas.Services
 {
     public class JwtService : IJwtService
     {
-        private readonly string _secretKey;
-        private readonly string _issuer;
-        private readonly string _audience;
-        public JwtService(IConfiguration conf)
+        private readonly IConfiguration _configuration;
+
+        public JwtService(IConfiguration configuration)
         {
-            _secretKey = conf.GetValue<string>("Jwt:Key") ?? "";
-            _issuer = conf.GetSection("Jwt:Issuer").Value ?? "";
-            _audience = conf.GetSection("Jwt:Audience").Value ?? "";
+            _configuration = configuration;
         }
-        public string GetJwtToken(Account account)
+
+        public string GetJwtToken(string username, string role, string accountId)
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_secretKey);
-            var tokenDescriptor = new SecurityTokenDescriptor()
+            List<Claim> claims = new List<Claim>()
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                new (ClaimTypes.NameIdentifier, account.Id.ToString()),
-                new (ClaimTypes.Name, account.UserName.ToString()),
-                new (ClaimTypes.Role, account.Role),
-                }),
-                Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
-                Issuer = _issuer,
-                Audience = _audience
+                new Claim(ClaimTypes.Name, username),
+                new Claim(ClaimTypes.Role, role),
+                new (ClaimTypes.NameIdentifier, accountId.ToString()),
             };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+
+            var secretToken = _configuration.GetSection("Jwt:Key").Value;
+            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(secretToken));
+
+            var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var token = new JwtSecurityToken(
+                issuer: "https://localhost:7077",
+                audience: "https://localhost:7077",
+                claims: claims,
+                expires: DateTime.Now.AddDays(1),
+                signingCredentials: cred);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

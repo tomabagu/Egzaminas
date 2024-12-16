@@ -4,9 +4,9 @@ namespace Egzaminas.Interfaces
 {
     public interface IAccountRepository
     {
-        Guid Create(Account model);
-        void Delete(Guid id);
-        bool Exists(Guid id);
-        Account? Get(string userName);
+        void Delete(Account account);
+        Account? GetAccount(string username);
+        Account? GetAccountByGuid(Guid id);
+        Guid SaveAccount(Account account);
     }
 }

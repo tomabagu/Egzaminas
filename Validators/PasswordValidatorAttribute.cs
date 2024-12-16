@@ -7,10 +7,10 @@ namespace Egzaminas.Validators
     {
         public int MinimumLength { get; set; } = 4;
         public int MaximumLength { get; set; } = 60;
-        public bool RequireUppercase { get; set; } = false;
-        public bool RequireLowercase { get; set; } = false;
-        public bool RequireDigit { get; set; } = false;
-        public bool RequireSpecialCharacter { get; set; } = false;
+        public bool RequireUppercase { get; set; } = true;
+        public bool RequireLowercase { get; set; } = true;
+        public bool RequireDigit { get; set; } = true;
+        public bool RequireSpecialCharacter { get; set; } = true;
 
         protected override ValidationResult IsValid(object? value, ValidationContext validationContext)
         {

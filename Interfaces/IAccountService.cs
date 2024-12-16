@@ -1,8 +1,10 @@
-﻿namespace Egzaminas.Interfaces
+﻿using Egzaminas.Entities;
+
+namespace Egzaminas.Interfaces
 {
     public interface IAccountService
     {
-        void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt);
-        bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt);
+        Account ChangeUserName(string username, string password, string newUsername);
+        Account SignupNewAccount(string username, string password);
     }
 }

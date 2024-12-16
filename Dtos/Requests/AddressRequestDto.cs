@@ -5,8 +5,11 @@ namespace Egzaminas.Dtos.Requests
 {
     public class AddressRequestDto
     {
-        public string City { get; set; } = null!;
-        public string Street { get; set; } = null!;
-        public string Number { get; set; } = null!;
+        [NotNullOrWhiteSpace]
+        public string City { get; set; }
+        [NotNullOrWhiteSpace]
+        public string Street { get; set; }
+        [NotNullOrWhiteSpace]
+        public string Number { get; set; }
     }
 }

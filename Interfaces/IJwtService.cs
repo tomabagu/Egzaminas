@@ -4,6 +4,6 @@ namespace Egzaminas.Interfaces
 {
     public interface IJwtService
     {
-        string GetJwtToken(Account account);
+        string GetJwtToken(string username, string role, string accountId);
     }
 }

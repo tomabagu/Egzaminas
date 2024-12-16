@@ -1,23 +1,16 @@
 ﻿using Egzaminas.Entities;
+using Egzaminas.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Egzaminas.Repository
 {
-    public class PersonRepository : IPersonRepository
+    public class PersonRepository : Repository<Person>, IPersonRepository
     {
-        private readonly AccountsDbContext _context;
+        public PersonRepository(AccountsDbContext context) : base(context) { }
 
-        public Guid Update(Person model)
+        override public Person? Get(Guid id)
         {
-            _context.Persons.Add(model);
-            _context.SaveChanges();
-            return model.Id;
-        }
-        public Person? Get(Guid accountId)
-        {
-            if (accountId == null)
-                throw new ArgumentNullException(nameof(accountId));
-
-            return _context.Persons.FirstOrDefault(x => x.AccountId == accountId);
+            return _context.Persons.Include(a => a.Address).FirstOrDefault(x => x.PersonId == id);
         }
 
     }
