@@ -1,0 +1,109 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2 {
+    color: #333;
+}
+
+#signup-login, #account-data {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+label {
+    margin-right: 10px;
+    font-weight: bold;
+    width: 150px;
+}
+
+input[type="text"], input[type="password"], input[type="email"], input[type="file"], select {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.password-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.password-container input {
+    flex: 1;
+}
+
+.password-container .toggle-password {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+}
+
+button {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#profile-image {
+    display: block;
+    margin: 20px auto;
+    max-width: 200px;
+    border-radius: 50%;
+}
+
+#logged-in-as {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#log-out-btn {
+    display: block;
+    margin: 20px auto;
+    background-color: #dc3545;
+}
+
+#log-out-btn:hover {
+    background-color: #c82333;
+}
+
+#success-message {
+    display: none;
+    color: green;
+    text-align: center;
+    margin-top: 20px;
+}
+
+#error-message {
+    display: none;
+    color: red;
+    text-align: center;
+    margin-top: 20px;
+}

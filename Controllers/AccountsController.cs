@@ -47,7 +47,7 @@ namespace Egzaminas.Controllers
             catch (Exception ex)
             {
                 var errors = new List<string> { ex.Message };
-                _logger.LogInformation($"Registration errors: {errors}");
+                _logger.LogError($"Registration errors: {errors}");
                 return BadRequest(new { Errors = errors });
             }
         }

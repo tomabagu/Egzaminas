@@ -105,7 +105,7 @@ namespace Egzaminas.Controllers
             } catch (Exception ex)
             {
                 var errors = new List<string> { ex.Message };
-                _logger.LogInformation($"Create person failed, validation errors: {errors}");
+                _logger.LogError($"Create person failed, validation errors: {errors}");
                 return BadRequest(new { Errors = errors });
             }
         }
@@ -206,7 +206,7 @@ namespace Egzaminas.Controllers
             catch (Exception ex)
             {
                 var errors = new List<string> { ex.Message };
-                _logger.LogInformation($"Failed to update Person code, validation errors: {errors}");
+                _logger.LogError($"Failed to update Person code, validation errors: {errors}");
                 return BadRequest(new { Errors = errors });
             }
         }

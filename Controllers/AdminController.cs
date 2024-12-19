@@ -29,7 +29,6 @@ namespace Egzaminas.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("GetAllAccounts")]
-        [Authorize]
         [ProducesResponseType(typeof(List<AccountsResultDto>), StatusCodes.Status200OK)]
         [Produces(MediaTypeNames.Application.Json)]
         public ActionResult GetAllAccounts()

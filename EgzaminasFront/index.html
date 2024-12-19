@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Account Management</title>
+</head>
+<h1 id="logged-in-as">Account Management</h1>
+<div id="success-message" style="display:none; color: green; text-align: center; margin-top: 20px;"></div>
+<div id="error-message" style="display:none; color: red; text-align: center; margin-top: 20px;"></div>
+<button type="submit" id="log-out-btn" onclick="logOut(event)">Log out</button>
+<div id="signup-login">
+    <form id="signup" onsubmit="register(event)">
+        <h2>Sign Up</h2>
+        <div class="form-group">
+            <label for="signup-username">Username</label>
+            <input type="text" id="signup-username" placeholder="Username" required>
+        </div>
+        <div class="form-group password-container">
+            <label for="signup-password">Password</label>
+            <input type="password" id="signup-password" placeholder="Password" required>
+            <span class="toggle-password" onclick="togglePassword('signup-password')">👁️</span>
+        </div>
+        <button type="submit">Sign Up</button>
+    </form>
+    <form id="loginForm" onsubmit="login(event)">
+        <h2>Login</h2>
+        <div class="form-group">
+            <label for="login-username">Username</label>
+            <input type="text" id="login-username" placeholder="Username" required>
+        </div>
+        <div class="form-group password-container">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" placeholder="Password" required>
+            <span class="toggle-password" onclick="togglePassword('login-password')">👁️</span>
+        </div>
+        <button type="submit">Login</button>
+    </form>
+</div>
+<div id="account-data">
+    <img id="profile-image" alt="Profile Image">
+    <form id="person-info" onsubmit="addPerson(event)">
+        <h2>Person Information</h2>
+        <div class="form-group">
+            <label for="personName">Name</label>
+            <input type="text" id="PersonName" placeholder="Name" required>
+            <button type="button" class="update-person-btn" data-field="PersonName" message="Person name">Update</button>
+        </div>
+        <div class="form-group">
+            <label for="PersonSurname">Surname</label>
+            <input type="text" id="PersonSurname" placeholder="Surname" required>
+            <button type="button" class="update-person-btn" data-field="PersonSurname" message="Person surname">Update</button>
+        </div>
+        <div class="form-group">
+            <label for="PersonCode">Person Code</label>
+            <input type="text" id="PersonCode" placeholder="Person Code" required>
+            <button type="button" class="update-person-btn" data-field="PersonCode" message="Person code">Update</button>
+        </div>
+        <div class="form-group">
+            <label for="PersonEmail">Email</label>
+            <input type="email" id="PersonEmail" placeholder="Email" required>
+            <button type="button" class="update-person-btn" data-field="PersonEmail" message="Person email">Update</button>
+        </div>
+        <div class="form-group">
+            <label for="PersonImage">Profile Image</label>
+            <input type="file" id="PersonImage" accept="image/*" required>
+            <button type="button" class="update-person-btn" data-field="PersonImage" message="Person image">Update</button>
+        </div>
+        <button type="submit" id="add-person-btn">Add person</button>
+    </form>
+    <form id="address-info" onsubmit="addAddress(event)">
+        <h2>Address Information</h2>
+        <div class="form-group">
+            <label for="AddressCity">City</label>
+            <select id="AddressCity"></select>
+            <button type="button" class="update-address-btn" data-field="AddressCity" message="Address city">Update</button>
+        </div>
+        <div class="form-group">
+            <label for="AddressStreet">Street</label>
+            <input type="text" id="AddressStreet" placeholder="Street" required>
+            <button type="button" class="update-address-btn" data-field="AddressStreet" message="Address street">Update</button>
+        </div>
+        <div class="form-group">
+            <label for="AddressNumber">Number</label>
+            <input type="text" id="AddressNumber" placeholder="Number" required>
+            <button type="button" class="update-address-btn" data-field="AddressNumber" message="Address number">Update</button>
+        </div>
+        <button type="submit" id="add-address-btn">Add address</button>
+    </form>
+</div>
+<script src="javascript.js"></script>
+</body>
+</html>
