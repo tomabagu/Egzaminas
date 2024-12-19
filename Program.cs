@@ -26,6 +26,7 @@ namespace Egzaminas
             builder.Services.AddTransient<ILoginService, LoginService>();
             builder.Services.AddTransient<IPersonMapper, PersonMapper>();
             builder.Services.AddTransient<IAddressMapper, AddressMapper>();
+            builder.Services.AddTransient<IAccountsMapper, AccountsMapper>();
 
             builder.Services.AddHttpContextAccessor();
 

@@ -5,6 +5,9 @@ using Egzaminas.Interfaces;
 using Egzaminas.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Net;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Egzaminas.Controllers
 {
@@ -13,6 +16,7 @@ namespace Egzaminas.Controllers
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public class PersonController : ControllerBase
     {
+        private readonly ILogger<PersonController> _logger;
         private readonly IPersonRepository _personRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly IJwtService _jwtService;
@@ -27,6 +31,7 @@ namespace Egzaminas.Controllers
             IPersonMapper mapper,
             IAccountService service)
         {
+            _logger = logger;
             _personRepository = personRepository;
             _accountRepository = accountRepository;
             _jwtService = jwtService;
@@ -47,9 +52,10 @@ namespace Egzaminas.Controllers
             var person = _personRepository.Get(personId);
             if (person == null)
             {
+                _logger.LogInformation($"Person not found for personId: {personId}");
                 return NotFound();
             }
-
+            _logger.LogInformation($"Getting person data for personId: {personId}");
             var dto = _mapper.Map(person);
             return Ok(dto);
             
@@ -69,14 +75,20 @@ namespace Egzaminas.Controllers
         public IActionResult CreatePerson(Guid accountId, [FromForm]PersonRequestDto req)
         {
             try {
+                if (accountId == null)
+                {
+                    throw new ArgumentNullException(nameof(accountId));
+                }
                 var account = _accountRepository.GetAccountByGuid(accountId);
                 if (account == null)
                 {
+                    _logger.LogInformation($"Account not found for accoundId: {accountId}");
                     return BadRequest("Invalid AccountId");
                 }
 
                 if (account.Person != null)
                 {
+                    _logger.LogInformation($"Failed to create person because person already exists: {account.Person.PersonId}");
                     return Conflict("Person with this accountId already exists");
                 }
 
@@ -88,34 +100,14 @@ namespace Egzaminas.Controllers
                 }
 
                 _personRepository.Add(person);
+                _logger.LogInformation($"Person created succesfully for accountId: {accountId}");
                 return Created(nameof(person), new { id = person.PersonId});
             } catch (Exception ex)
             {
                 var errors = new List<string> { ex.Message };
+                _logger.LogInformation($"Create person failed, validation errors: {errors}");
                 return BadRequest(new { Errors = errors });
             }
-        }
-        /// <summary>
-        /// Atnaujinti asmens informaciją
-        /// </summary>
-        /// <param name="personId"></param>
-        /// <param name="req"></param>
-        /// <returns></returns>
-        [HttpPut("UpdatePerson/{personId}")]
-        [Authorize]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult UpdatePerson(Guid personId, [FromForm] PersonRequestDto req)
-        {
-            var person = _personRepository.Get(personId);
-            if (person == null)
-            {
-                return BadRequest("Invalid personId");
-            }
-
-            _mapper.Project(person, req);
-            _personRepository.Update(person);
-            return NoContent();
         }
         /// <summary>
         /// Gauti asmens nuotrauką
@@ -131,8 +123,10 @@ namespace Egzaminas.Controllers
             var person = _personRepository.Get(personId);
             if (person == null)
             {
+                _logger.LogInformation($"Person not found for id: {personId}");
                 return NotFound();
             }
+            _logger.LogInformation($"Getting person image for personId: {personId}");
             return File(person.PersonImageBytes, "image/jpeg");
         }
         /// <summary>
@@ -150,12 +144,13 @@ namespace Egzaminas.Controllers
             var person = _personRepository.Get(dto.PersonId);
             if (person == null)
             {
+                _logger.LogInformation($"Person not found for id: {dto.PersonId}");
                 return NotFound();
             }
 
             person.Name = dto.PersonName;
             _personRepository.Update(person);
-
+            _logger.LogInformation($"Person name updated succesfully for personId {person.PersonId}");
             return NoContent();
         }
         /// <summary>
@@ -173,12 +168,13 @@ namespace Egzaminas.Controllers
             var person = _personRepository.Get(dto.PersonId);
             if (person == null)
             {
+                _logger.LogInformation($"Person not found for id: {dto.PersonId}");
                 return NotFound();
             }
 
             person.Surname = dto.PersonSurname;
             _personRepository.Update(person);
-
+            _logger.LogInformation($"Person surname updated succesfully for personId {person.PersonId}");
             return NoContent();
         }
         /// <summary>
@@ -198,17 +194,19 @@ namespace Egzaminas.Controllers
                 var person = _personRepository.Get(dto.PersonId);
                 if (person == null)
                 {
+                    _logger.LogInformation($"Person not found for id: {dto.PersonId}");
                     return NotFound();
                 }
 
                 person.PersonCode = dto.PersonCode;
                 _personRepository.Update(person);
-
+                _logger.LogInformation($"Person code updated succesfully for personId {person.PersonId}");
                 return NoContent();
             }
             catch (Exception ex)
             {
                 var errors = new List<string> { ex.Message };
+                _logger.LogInformation($"Failed to update Person code, validation errors: {errors}");
                 return BadRequest(new { Errors = errors });
             }
         }
@@ -227,12 +225,13 @@ namespace Egzaminas.Controllers
             var person = _personRepository.Get(dto.PersonId);
             if (person == null)
             {
+                _logger.LogInformation($"Person not found for id: {dto.PersonId}");
                 return NotFound();
             }
 
             person.Email = dto.PersonEmail;
             _personRepository.Update(person);
-
+            _logger.LogInformation($"Person email updated succesfully for personId {person.PersonId}");
             return NoContent();
         }
         /// <summary>
@@ -250,12 +249,13 @@ namespace Egzaminas.Controllers
             var person = _personRepository.Get(dto.PersonId);
             if (person == null)
             {
+                _logger.LogInformation($"Person not found for id: {dto.PersonId}");
                 return NotFound();
             }
 
             person.PersonImageBytes = ImageService.ResizeImage(dto.PersonImage);
             _personRepository.Update(person);
-
+            _logger.LogInformation($"Person image updated succesfully for personId {person.PersonId}");
             return NoContent();
         }
     }

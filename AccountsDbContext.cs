@@ -16,14 +16,14 @@ namespace Egzaminas
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Account>()
-            .HasOne(a => a.Person)
-            .WithOne(p => p.Account)
-            .HasForeignKey<Person>(p => p.AccountId)
-            .OnDelete(DeleteBehavior.Cascade);
+               .HasOne(a => a.Person)
+               .WithOne(p => p.Account)
+               .HasForeignKey<Person>(p => p.AccountId)
+               .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Person>()
                 .HasOne(p => p.Address)
-                .WithOne()
+                .WithOne(a => a.Person)
                 .HasForeignKey<Person>(p => p.AddressId)
                 .OnDelete(DeleteBehavior.Cascade);
 

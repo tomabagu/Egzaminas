@@ -9,7 +9,7 @@ namespace Egzaminas.Entities
         public string UserName { get; set; } = string.Empty;
         public byte[] PasswordHash { get; set; } = null!;
         public byte[] PasswordSalt { get; set; } = null!;
-        public string Role { get; set; } = "user";
+        public string Role { get; set; } = "User";
         public Person? Person { get; set; }
     }
 }

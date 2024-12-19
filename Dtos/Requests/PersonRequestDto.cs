@@ -15,7 +15,8 @@ namespace Egzaminas.Dtos.Requests
         [EmailAddress]
         [EmailDomainValidator]
         public string Email { get; set; } = null!;
-
+        [AllowedFileExtensionValidator([".jpg"])]
+        [MaxFileSize(5 * 1024 * 1024)] //5mb
         public IFormFile ProfilePicture { get; set; }
     }
 }

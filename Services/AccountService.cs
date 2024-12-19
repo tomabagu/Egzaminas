@@ -2,6 +2,7 @@
 using System.Text;
 using Egzaminas.Entities;
 using Egzaminas.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Egzaminas.Services
 {
@@ -15,12 +16,18 @@ namespace Egzaminas.Services
         }
         public Account SignupNewAccount(string username, string password)
         {
+            var exists = _repository.GetAccount(username);
+            if (exists != null)
+            {
+                throw new ArgumentException("Username already exists");
+            }
             var account = CreateAccount(username, password);
             _repository.SaveAccount(account);
             return account;
         }
         private Account CreateAccount(string username, string password)
         {
+
             CreatePasswordHash(password, out byte[] passwordHash, out byte[] passwordSalt);
             var account = new Account
             {
@@ -31,19 +38,6 @@ namespace Egzaminas.Services
             };
             return account;
         }
-        public Account ChangeUserName(string username, string password, string newUsername)
-        {
-            var account = _repository.GetAccount(username);
-            if (VerifyPasswordHash(password, account.PasswordHash, account.PasswordSalt))
-            {
-                account.UserName = newUsername;
-                _repository.SaveAccount(account);
-                return account;
-            }
-
-            return null;
-        }
-
         private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
             using var hmac = new HMACSHA512(passwordSalt);

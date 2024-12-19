@@ -7,6 +7,7 @@ namespace Egzaminas.Interfaces
         void Delete(Account account);
         Account? GetAccount(string username);
         Account? GetAccountByGuid(Guid id);
+        ICollection<Account> GetAllAccounts();
         Guid SaveAccount(Account account);
     }
 }

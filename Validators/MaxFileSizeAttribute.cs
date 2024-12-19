@@ -22,7 +22,7 @@ namespace Egzaminas.Validators
             }
             if (file.Length > _maxFileSize)
             {
-                return new ValidationResult($"File size should not be larger than {_maxFileSize} bytes");
+                return new ValidationResult($"File size should not be larger than {_maxFileSize / 1024 / 1024} MB");
             }
             return ValidationResult.Success;
         }

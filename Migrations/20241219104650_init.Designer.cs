@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Egzaminas.Migrations
 {
     [DbContext(typeof(AccountsDbContext))]
-    [Migration("20241212194103_init")]
+    [Migration("20241219104650_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -128,7 +128,7 @@ namespace Egzaminas.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Egzaminas.Entities.Address", "Address")
-                        .WithOne()
+                        .WithOne("Person")
                         .HasForeignKey("Egzaminas.Entities.Person", "AddressId")
                         .OnDelete(DeleteBehavior.Cascade);
 
@@ -138,6 +138,11 @@ namespace Egzaminas.Migrations
                 });
 
             modelBuilder.Entity("Egzaminas.Entities.Account", b =>
+                {
+                    b.Navigation("Person");
+                });
+
+            modelBuilder.Entity("Egzaminas.Entities.Address", b =>
                 {
                     b.Navigation("Person");
                 });

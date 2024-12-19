@@ -125,7 +125,7 @@ namespace Egzaminas.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Egzaminas.Entities.Address", "Address")
-                        .WithOne()
+                        .WithOne("Person")
                         .HasForeignKey("Egzaminas.Entities.Person", "AddressId")
                         .OnDelete(DeleteBehavior.Cascade);
 
@@ -135,6 +135,11 @@ namespace Egzaminas.Migrations
                 });
 
             modelBuilder.Entity("Egzaminas.Entities.Account", b =>
+                {
+                    b.Navigation("Person");
+                });
+
+            modelBuilder.Entity("Egzaminas.Entities.Address", b =>
                 {
                     b.Navigation("Person");
                 });

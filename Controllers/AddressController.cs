@@ -1,7 +1,9 @@
 ﻿using Egzaminas.Dtos.Requests;
+using Egzaminas.Entities;
 using Egzaminas.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace Egzaminas.Controllers
 {
@@ -10,6 +12,7 @@ namespace Egzaminas.Controllers
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public class AddressController : ControllerBase
     {
+        private readonly ILogger<AddressController> _logger;
         private readonly IPersonRepository _personRepository;
         private readonly IAddressRepository _addressRepository;
         private readonly IAddressMapper _mapper;
@@ -19,6 +22,7 @@ namespace Egzaminas.Controllers
             IAddressRepository addressRepository,
             IAddressMapper mapper)
         {
+            _logger = logger;
             _personRepository = personRepository;
             _addressRepository = addressRepository;
             _mapper = mapper;
@@ -38,9 +42,10 @@ namespace Egzaminas.Controllers
             var address = _addressRepository.Get(addressId);
             if (address == null)
             {
+                _logger.LogInformation($"Address not found for id: {addressId}");
                 return NotFound();
             }
-
+            _logger.LogInformation($"Getting address data found for id: {addressId}");
             var dto = _mapper.Map(address);
             return Ok(dto);
             
@@ -61,11 +66,13 @@ namespace Egzaminas.Controllers
             var person = _personRepository.Get(personId);
             if (person == null)
             {
+                _logger.LogInformation($"Person not found for id: {personId}");
                 return BadRequest("Invalid personId");
             }
 
             if (person.Address != null)
             {
+                _logger.LogInformation($"Address already exists for personId: {personId}");
                 return Conflict("Address with this personId already exists");
             }
 
@@ -74,35 +81,14 @@ namespace Egzaminas.Controllers
             if (person.Address == null)
             {
                 address.AddressId = Guid.NewGuid();
-                //person.AddressId = address.Id;
                 person.Address = address;
             }
             _addressRepository.Add(address);
             _personRepository.Update(person);
-           
-            return Created(nameof(address), new { id = address.AddressId});
-        }
-        /// <summary>
-        /// Atnaujinti vartotojo adreso informaciją
-        /// </summary>
-        /// <param name="addressId"></param>
-        /// <param name="req"></param>
-        /// <returns></returns>
-        [HttpPut("UpdateAddress/{addressId}")]
-        [Authorize]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult UpdateAddress(Guid addressId, [FromForm] AddressRequestDto req)
-        {
-            var address = _addressRepository.Get(addressId);
-            if (address == null)
-            {
-                return BadRequest("Invalid addressId");
-            }
 
-            _mapper.Project(address, req);
-            _addressRepository.Update(address);
-            return NoContent();
+            _logger.LogInformation($"New address added with {address.AddressId} for personId: {person.PersonId}");
+
+            return Created(nameof(address), new { id = address.AddressId});
         }
         /// <summary>
         /// Atnaujinti asmens adreso miestą
@@ -119,11 +105,14 @@ namespace Egzaminas.Controllers
             var address = _addressRepository.Get(dto.AddressId);
             if (address == null)
             {
+                _logger.LogInformation($"Address not found for id: {dto.AddressId}");
                 return NotFound();
             }
 
             address.City = dto.AddressCity;
             _addressRepository.Update(address);
+
+            _logger.LogInformation($"Address city updated succesfully for addressId {address.AddressId}");
 
             return NoContent();
         }
@@ -142,12 +131,13 @@ namespace Egzaminas.Controllers
             var address = _addressRepository.Get(dto.AddressId);
             if (address == null)
             {
+                _logger.LogInformation($"Address not found for id: {dto.AddressId}");
                 return NotFound();
             }
 
             address.Street = dto.AddressStreet;
             _addressRepository.Update(address);
-
+            _logger.LogInformation($"Address street updated succesfully for addressId {address.AddressId}");
             return NoContent();
         }
         /// <summary>
@@ -165,12 +155,13 @@ namespace Egzaminas.Controllers
             var address = _addressRepository.Get(dto.AddressId);
             if (address == null)
             {
+                _logger.LogInformation($"Address not found for id: {dto.AddressId}");
                 return NotFound();
             }
 
             address.Number = dto.AddressNumber;
             _addressRepository.Update(address);
-
+            _logger.LogInformation($"Address number updated succesfully for addressId {address.AddressId}");
             return NoContent();
         }
     }
